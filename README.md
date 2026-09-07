@@ -18,7 +18,7 @@ braucht.
 | **Bewertung** | Eine neue Bewertung erfassen |
 | **Spielerprofil & Vergleich** | Das Profil eines Spielers und der direkte Spielervergleich |
 | **Mannschaften und Gewichtung** | Mannschaftsliste, **Altersgewichtungen** und die Förder-/Beobachtungsschwelle |
-| **Einstellungen** | Speicherort (Nextcloud-Verbindung) und JSON-Export; JSON-Import, Excel-Import und das automatische Backup darin sind der Administration vorbehalten |
+| **Einstellungen** | Speicherort (Nextcloud-Verbindung); der Excel-Import darin ist der Administration vorbehalten |
 | **Info** | Was die App tut, die Änderungen und der Datenschutz-Hinweis |
 
 ## Altersgewichtung und Schwelle
@@ -61,7 +61,7 @@ Hier werden **eigene** Spieler bewertet und gefördert. Die Beobachtung
 
 Die Anmeldung läuft über die [Tools-Übersicht](https://sc1911heiligenstadt.github.io/ToolsUebersicht/) — dort einmal anmelden, danach ist dieses Werkzeug offen.
 
-Die Rechte gelten in drei Stufen: **Sehen** (Dashboard, Spielerprofile und Vergleich ansehen), **Bearbeiten** (Spieler pflegen und bewerten — dazu gehört auch der Reiter *Einstellungen* mit dem eigenen Speicherort und dem JSON-Export) und **Administrieren** (JSON-Import, Excel-Import und das automatische Backup innerhalb der Einstellungen). Wer welche Stufe hat, legt die Tools-Übersicht fest. Der Reiter *Info* ist für alle sichtbar.
+Die Rechte gelten in drei Stufen: **Sehen** (Dashboard, Spielerprofile und Vergleich ansehen), **Bearbeiten** (Spieler pflegen und bewerten — dazu gehört auch der Reiter *Einstellungen* mit dem eigenen Speicherort) und **Administrieren** (der Excel-Import innerhalb der Einstellungen). Wer welche Stufe hat, legt die Tools-Übersicht fest. Der Reiter *Info* ist für alle sichtbar.
 
 Wird die App stattdessen ohne Anmeldung mit einer lokalen Datei betrieben, gelten diese Stufen nicht.
 
