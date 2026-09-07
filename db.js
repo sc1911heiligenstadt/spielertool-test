@@ -4,7 +4,6 @@ const FileStore = (() => {
   const DB_NAME = "spielertool-db";
   const STORE = "handles";
   const KEY_DATA = "dataFileHandle";
-  const KEY_BACKUP_DIR = "backupDirHandle";
   const KEY_STORAGE_MODE = "storageMode";
   const KEY_WEBDAV_CONFIG = "webdavConfig";
 
@@ -53,9 +52,6 @@ const FileStore = (() => {
     getHandle: () => getValue(KEY_DATA),
     setHandle: (handle) => setValue(KEY_DATA, handle),
     clearHandle: () => clearValue(KEY_DATA),
-    getBackupDirHandle: () => getValue(KEY_BACKUP_DIR),
-    setBackupDirHandle: (handle) => setValue(KEY_BACKUP_DIR, handle),
-    clearBackupDirHandle: () => clearValue(KEY_BACKUP_DIR),
     getStorageMode: () => getValue(KEY_STORAGE_MODE),
     setStorageMode: (mode) => setValue(KEY_STORAGE_MODE, mode),
     clearWebdavConfig: () => clearValue(KEY_WEBDAV_CONFIG)

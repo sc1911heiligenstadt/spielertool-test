@@ -2,6 +2,21 @@ const APP_VERSION = "1.0";
 
 const APP_CHANGELOG = [
   {
+    version: "1.5",
+    groups: [
+      {
+        title: "Die Sicherungs-Knöpfe sind entfallen",
+        items: [
+          "Unter Einstellungen gab es zwei Wege zu einer Sicherheitskopie: „JSON exportieren“ / „JSON importieren“ und einen Backup-Ordner, in den die App bei jedem Start eine datierte Datei ablegte. Beides gibt es nicht mehr.",
+          "Der Grund: damit liefen mehrere Stände derselben Daten nebeneinander, und man sah der App nicht an, welcher gerade gilt.",
+          "Der Ordner-Weg lief ohnehin nur im Chrome am Rechner — am Handy und im Safari gab es ihn nie.",
+          "Wer schon einen Backup-Ordner verknüpft hatte: die dort liegenden Dateien bleiben unberührt auf dem Rechner liegen. Die App legt nur nichts Neues mehr ab.",
+          "Der Spieler-Import aus Excel-Dateien bleibt unverändert."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.4",
     groups: [
       {
@@ -114,7 +129,6 @@ const APP_CHANGELOG = [
           "Wer das Werkzeug in der Übersicht sehen darf, kann die Spielerdaten öffnen; geprüft wird das auf dem Server.",
           "Alternativ und ohne Anmeldung: eine lokale Datei über den Dateiauswähler, deren Zugriffsrecht sich der Browser dauerhaft merkt.",
           "Spieler-Import aus Excel-Dateien mit Vorname, Nachname, Position und Geburtsdatum — mit oder ohne Kopfzeile.",
-          "Bei jedem Start legt die App ein datiertes Backup in einem wählbaren Ordner ab; zusätzlich lässt sich jederzeit von Hand sichern.",
           "Ändern zwei Geräte gleichzeitig denselben Stand, erkennt die App das, lädt den fremden Stand nach und sagt Bescheid.",
           "Rückmeldungen und Änderungswünsche laufen zentral über die Tools-Übersicht."
         ]

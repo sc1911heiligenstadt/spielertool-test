@@ -5,12 +5,11 @@ let currentUser = null; // {username, isAdmin, groupIds, vorname, nachname, canE
 // wer die Datei lokal geöffnet hat, darf sie wie bisher komplett bearbeiten. Nur im
 // Gateway-Modus entscheidet das server-seitige Bearbeiten-Recht (editGroupIds).
 function canEdit() { return storageMode !== "gateway" || !!(currentUser && (currentUser.isAdmin || currentUser.canEdit)); }
-// Dritte Stufe "Administrieren" (Tools-Übersicht, seit 2026-07-24): JSON-/Excel-
-// Import und das automatische Backup sind strukturelle Eingriffe und hängen an
-// dieser Stufe. Im lokalen Datei-Modus (kein Gateway) keine Einschränkung.
+// Dritte Stufe "Administrieren" (Tools-Übersicht, seit 2026-07-24): der
+// Excel-Import ist ein struktureller Eingriff und hängt an dieser Stufe. Im lokalen Datei-Modus (kein Gateway) keine Einschränkung.
 function canAdmin() { return storageMode !== "gateway" || !!(currentUser && (currentUser.isAdmin || currentUser.canAdmin)); }
-// Blendet die rechte-abhängigen Elemente ein/aus: .editor-only ab Bearbeiten
-// (JSON-Export), .admin-only ab Administrieren. Läuft in startApp() für beide
+// Blendet die rechte-abhängigen Elemente ein/aus: .editor-only ab Bearbeiten,
+// .admin-only ab Administrieren. Läuft in startApp() für beide
 // Speicher-Modi — die Elemente starten im HTML mit .hidden (fail-closed).
 function applyRechteVisibility() {
   const editable = canEdit();
@@ -30,9 +29,7 @@ function applyRechteVisibility() {
 }
 let fileHandle = null;
 let pendingHandle = null;
-let backupDirHandle = null;
 let storageMode = "fs"; // "fs" | "gateway"
-let autoBackupDoneThisSession = false;
 let saveTimer = null;
 let profileCharts = { line: null, radar: null, compare: null };
 const TEAM_FILTER_SELECT_IDS = [
@@ -445,8 +442,6 @@ function startApp() {
   const fsActions = document.getElementById("settings-fs-actions");
   if (fsActions) fsActions.style.display = storageMode === "fs" ? "flex" : "none";
   renderAll();
-  updateBackupFolderStatus();
-  tryAutoBackupOnStart();
 }
 
 function setSaveStatus(text) {
@@ -2023,47 +2018,6 @@ async function exportProfilePdf() {
   doc.save(`Spielerprofil_${playerFullName(player).replace(/\s+/g, "_")}_${todayStr()}.pdf`);
 }
 
-// ---------- Export / Import (Backup) ----------
-
-function setupBackupButtons() {
-  document.getElementById("btn-export").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify(appData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "spielerdaten-backup-" + todayStr() + ".json";
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-  document.getElementById("btn-import").addEventListener("click", () => {
-    document.getElementById("import-file-input").click();
-  });
-
-  document.getElementById("import-file-input").addEventListener("change", async (e) => {
-    if (!canAdmin()) return;
-    const file = e.target.files[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const data = JSON.parse(text);
-      if (!Array.isArray(data.players) || !Array.isArray(data.evaluations)) {
-        alert("Ungültiges Datenformat.");
-        return;
-      }
-      if (!confirm("Aktuelle Daten durch die importierte Datei ersetzen?")) return;
-      appData = data;
-      migrateData(appData);
-      autoAssignAllPlayers();
-      persist();
-      renderAll();
-    } catch (err) {
-      alert("Datei konnte nicht gelesen werden.");
-    }
-    e.target.value = "";
-  });
-}
-
 // ---------- Excel-Import (Spieler) ----------
 
 function normalizeHeaderKey(key) {
@@ -2180,73 +2134,6 @@ function setupExcelImport() {
   });
 }
 
-// ---------- Automatisches Backup ----------
-
-function setupBackupFolder() {
-  document.getElementById("btn-choose-backup-folder").addEventListener("click", async () => {
-    if (!canAdmin()) return;
-    try {
-      const dir = await window.showDirectoryPicker();
-      if (!(await verifyPermission(dir, true))) {
-        alert("Zugriff auf den Ordner wurde nicht erlaubt.");
-        return;
-      }
-      backupDirHandle = dir;
-      await FileStore.setBackupDirHandle(dir);
-      updateBackupFolderStatus();
-      await runAutoBackup(true);
-    } catch (e) {
-      if (e.name !== "AbortError") console.error(e);
-    }
-  });
-
-  document.getElementById("btn-backup-now").addEventListener("click", async () => {
-    if (!canAdmin()) return;
-    if (!backupDirHandle) {
-      alert("Bitte zuerst einen Backup-Ordner wählen.");
-      return;
-    }
-    await runAutoBackup(true);
-  });
-}
-
-function updateBackupFolderStatus() {
-  const nameEl = document.getElementById("settings-backup-folder-name");
-  if (nameEl) nameEl.textContent = backupDirHandle ? backupDirHandle.name : "— kein Ordner gewählt —";
-}
-
-async function runAutoBackup(withPrompt) {
-  const statusEl = document.getElementById("settings-backup-status");
-  if (!backupDirHandle) return;
-  try {
-    const granted = withPrompt ? await verifyPermission(backupDirHandle, true) : await verifyPermissionSilent(backupDirHandle);
-    if (!granted) {
-      if (statusEl) statusEl.textContent = "Automatisches Backup nicht möglich – Zugriff auf den Backup-Ordner fehlt. Bitte Ordner erneut wählen.";
-      return;
-    }
-    const fileName = `spielerdaten-backup-${todayStr()}.json`;
-    const backupFileHandle = await backupDirHandle.getFileHandle(fileName, { create: true });
-    await writeDataFile(backupFileHandle, appData);
-    if (statusEl) {
-      const time = new Date().toLocaleTimeString("de-DE");
-      statusEl.textContent = `Letztes automatisches Backup: ${fileName} (${time} Uhr)`;
-    }
-  } catch (e) {
-    console.error(e);
-    if (statusEl) statusEl.textContent = "Backup fehlgeschlagen: " + e.message;
-  }
-}
-
-async function tryAutoBackupOnStart() {
-  if (autoBackupDoneThisSession) return;
-  autoBackupDoneThisSession = true;
-  const dir = await FileStore.getBackupDirHandle();
-  if (!dir) return;
-  backupDirHandle = dir;
-  updateBackupFolderStatus();
-  await runAutoBackup(false);
-}
-
 // ---------- Start ----------
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -2259,8 +2146,6 @@ window.addEventListener("DOMContentLoaded", () => {
   setupPlayerForm();
   setupEvaluateForm();
   setupProfileForm();
-  setupBackupButtons();
-  setupBackupFolder();
   setupExcelImport();
   init();
 });

@@ -247,15 +247,6 @@
           <button class="btn secondary small" id="btn-change-location-new">Aktuelle Daten an neuem Ort speichern…</button>
         </div>
       </div>
-      <div class="card editor-only hidden">
-        <h3>Daten-Sicherung</h3>
-        <p class="muted" style="margin-bottom:10px;">Zusätzliche Sicherheitskopie unabhängig von der verbundenen Datei.</p>
-        <div class="btn-row" style="justify-content:flex-start;">
-          <button class="btn secondary small" id="btn-export">JSON exportieren</button>
-          <button class="btn secondary small admin-only hidden" id="btn-import">JSON importieren</button>
-          <input type="file" id="import-file-input" aria-label="Sicherungsdatei auswählen" accept="application/json" style="display:none;" />
-        </div>
-      </div>
       <div class="card admin-only hidden">
         <h3>Spieler aus Excel importieren</h3>
         <p class="muted" style="margin-bottom:10px;">
@@ -270,19 +261,6 @@
           <input type="file" id="import-excel-input" aria-label="Excel-Datei auswählen" accept=".xlsx,.xls,.csv" style="display:none;" />
         </div>
         <p class="muted" id="settings-excel-import-status" style="margin-top:10px;"></p>
-      </div>
-      <div class="card admin-only hidden">
-        <h3>Automatisches Backup</h3>
-        <p class="muted" style="margin-bottom:6px;">
-          Ordner: <strong id="settings-backup-folder-name">— kein Ordner gewählt —</strong>
-        </p>
-        <p class="muted" style="margin-bottom:10px;" id="settings-backup-status">
-          Bei jedem Start der App wird automatisch eine Sicherungskopie mit Datum im gewählten Ordner abgelegt.
-        </p>
-        <div class="btn-row" style="justify-content:flex-start;">
-          <button class="btn secondary small" id="btn-choose-backup-folder">Backup-Ordner wählen…</button>
-          <button class="btn secondary small" id="btn-backup-now">Jetzt sichern</button>
-        </div>
       </div>
     </section>
 
@@ -470,8 +448,8 @@
   </main>
 </div>
 
-<script src="config.js?v=1.3"></script>
-<script src="db.js?v=1.0"></script>
-<script src="app.js?v=1.4"></script>
+<script src="config.js?v=1.4"></script>
+<script src="db.js?v=1.1"></script>
+<script src="app.js?v=1.5"></script>
 </body>
 </html>
