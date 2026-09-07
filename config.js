@@ -1,6 +1,91 @@
 const APP_VERSION = "1.0";
 
+// Was die App kann — steht im Info-Reiter als Karte "Funktionen".
+// WICHTIG: Das ist NICHT der Changelog. Hier steht der ZUSTAND ("die Mannschaft
+// ergibt sich aus dem Geburtsdatum"), dort die Aenderung. Wer eine Funktion
+// umbaut oder abschaltet, zieht diesen Text mit.
+// Diese App ist die Testfassung des Spielertools und hat deshalb keinen eigenen
+// Abschnitt in E:\SC1911-Tools-Anleitung.txt — die Liste ist bewusst kurz.
+const APP_FUNKTIONEN = [
+  {
+    title: "Wofür die App da ist",
+    items: [
+      "Bewertung und Förderung der eigenen Nachwuchsspieler: anlegen, regelmäßig bewerten, Profile vergleichen.",
+      "Dies ist der Erprobungsstand des Spielertools — hier wird ausprobiert, bevor etwas in den Regelbetrieb geht.",
+      "Nicht zu verwechseln mit der Spielersichtung: dort werden fremde Spieler beobachtet, hier die eigenen bewertet."
+    ]
+  },
+  {
+    title: "Spieler und Mannschaften",
+    items: [
+      "Spieler anlegen, direkt in der Liste bearbeiten und suchen — nach Vor- und Nachname, Position und Geburtsdatum.",
+      "Die Mannschaft ergibt sich aus dem Geburtsdatum. Wer einen Spieler von Hand umsetzt, findet ihn dort wieder; die automatische Zuordnung greift danach nicht mehr in diesen Spieler ein.",
+      "Das Namensfeld einer neuen Mannschaft schlägt die echten Mannschaften des Vereins vor; ein eigener Name für eine Sichtungsgruppe lässt sich frei eintippen.",
+      "Der Altersstufen-Filter wirkt über alle Reiter hinweg."
+    ]
+  },
+  {
+    title: "Bewertung",
+    items: [
+      "Bewertet wird in vier Bereichen: Technik & Taktik, Athletik, Mentale Stärke sowie Charakter & Sozial. Zu jedem Kriterium gibt es eine Hilfe mit Beschreibungen für 1, 5 und 10 Punkte.",
+      "Bei einem Torhüter tritt „Torwartspiel“ mit sieben eigenen Kriterien an die Stelle von Technik & Taktik. Gewichtung und Schwelle bleiben dieselben.",
+      "Das Bewerter-Feld ist mit dem angemeldeten Nutzer vorbelegt und bleibt änderbar.",
+      "Die Gewichtung der vier Bereiche lässt sich je Altersstufe einstellen, ebenso die Förder- und Beobachtungsschwelle."
+    ]
+  },
+  {
+    title: "Übersicht, Profil und PDF",
+    items: [
+      "Das Dashboard zeigt die Mannschaft auf einen Blick, mit Filter danach, wie alt die letzte Bewertung ist — 3, 6, 9 oder 12 Monate.",
+      "Spieler über der Förderschwelle sind markiert; ein Klick führt direkt zur Bewertung.",
+      "Das Spielerprofil zeigt Verlaufs- und Radar-Diagramme über alle Bewertungszeitpunkte sowie den direkten Vergleich zweier Spieler desselben Spielertyps.",
+      "Aus dem Profil lässt sich ein PDF erzeugen, das die letzten drei Bewertungen gegenüberstellt."
+    ]
+  },
+  {
+    title: "Grenzen",
+    items: [
+      "Ein Spieler wird gegen seinen Jahrgang gemessen, nicht gegen den ganzen Verein. Die Förderentscheidung ergibt sich aus dem Verlauf, nicht aus einer einzelnen Bewertung.",
+      "Es gibt keinen JSON-Export, keinen JSON-Import und keinen Backup-Ordner mehr — sonst liefen mehrere Stände derselben Daten nebeneinander. Der Spieler-Import aus Excel bleibt.",
+      "Verglichen werden nur Spieler desselben Spielertyps. Wird ein Spieler umgestellt, zählen die Werte des alten Typs nicht mehr mit.",
+      "Es geht um Bewertungen minderjähriger Spieler. Die Sichtbarkeit ist eng gesteckt, und im Repo stehen keine dieser Daten."
+    ]
+  },
+  {
+    title: "Wer darf was",
+    items: [
+      "Sehen: Spielerliste, Bewertungen, Profile und Diagramme. Die Bearbeiten-Bereiche sind gesperrt; Suche, Filter und Sortierung bleiben nutzbar.",
+      "Bearbeiten: Spieler und Bewertungen pflegen, Gewichtungen und Schwellen einstellen, das Profil als PDF ausgeben. Dazu der Reiter „Einstellungen“ mit dem Speicherort.",
+      "Administrieren: zusätzlich der Spieler-Import aus Excel.",
+      "Im lokalen Datei-Modus ohne Anmeldung gelten diese Stufen nicht. Der Reiter „Info“ ist für alle sichtbar."
+    ]
+  },
+  {
+    title: "Bedienung und Speicherung",
+    items: [
+      "Gespeichert wird in der Vereins-Nextcloud über die zentrale Anmeldung der Tools-Übersicht — ein eigenes Passwort braucht es nicht, auch nicht am Handy.",
+      "Alternativ und ohne Anmeldung: eine lokale Datei über den Dateiauswähler, deren Zugriffsrecht sich der Browser merkt.",
+      "Ändern zwei Geräte gleichzeitig denselben Stand, erkennt die App das, lädt den fremden Stand nach und sagt Bescheid.",
+      "Die Reiterleiste bricht am Handy um, breite Tabellen scrollen für sich, und die App lässt sich als Anwendung auf dem Startbildschirm ablegen.",
+      "Datumsangaben stehen überall im deutschen Format."
+    ]
+  }
+];
+
 const APP_CHANGELOG = [
+  {
+    version: "1.6",
+    groups: [
+      {
+        title: "Im Info-Reiter steht jetzt, was die App kann",
+        items: [
+          "Die Liste der Änderungen und die Versionsnummer sind aus dem Info-Reiter verschwunden.",
+          "Stattdessen steht dort die Karte „Funktionen“: was die App kann, nach Themen geordnet.",
+          "Was sich geändert hat, steht weiterhin in den Neuigkeiten auf der Startseite der Tools-Übersicht."
+        ]
+      }
+    ]
+  },
   {
     version: "1.5",
     groups: [
